@@ -11,10 +11,12 @@ function RTE({name, control, label, defaultValue = ""}) {
       <Controller
         name = {name || "content"}
         control={control}
-        render={({field: {onChnage}})=> (
+        render={({field: {onChange}})=> (
           <Editor
+          apiKey='c395paraunmx9lm4o237g3xd20nps1vo6b4p6ue1co1rd0cs'
         initialValue={defaultValue}
         init={{
+          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
             initialValue: defaultValue,
             height: 500,
             menubar: true,

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import {useSelector} from 'react-redux'
 
 function PostForm({post}) {
-  const {register, handleSubmit, watch, setValue, control, getValued} = useForm({
+  const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
     defaultValues:{
       title: post?.title || "",
       slug: post?.slug || "",
@@ -17,7 +17,7 @@ function PostForm({post}) {
   })
 
   const navigate = useNavigate();
-  const userData = useSelector(state => state.user.userData)
+  const userData = useSelector(state => state.userData)
 
   const submit = async (data) =>{
     if (post) {
@@ -52,8 +52,18 @@ function PostForm({post}) {
       return value
       .trim()
       .toLowerCase()
-      .replace(/^[a-zA-Z\d\s]+/g, '_')
+      .replace(/[^a-zA-Z\d\s]+/g, "-")
+      .replace(/\s/g, "-");
 
+      // const slug = value.replace(/[^\w\s]/gi, '');
+  
+      // // Replace spaces with hyphens
+      // slug = slug.replace(/\s+/g, '-');
+      
+      // // Convert to lowercase
+      // slug = slug.toLowerCase();
+      
+      // return slug;
     }
 
     return ''
@@ -63,8 +73,7 @@ function PostForm({post}) {
   useEffect(()=>{
     const subscription = watch((value, {name}) => {
       if(name === 'title'){
-        setValue('slug', slugTrandform(value.title))
-        {shouldValidate:true}
+        setValue('slug', slugTrandform(value.title), { shouldValidate: true });
       }
     })
   },[watch, slugTrandform, setValue])
@@ -84,7 +93,7 @@ function PostForm({post}) {
                     className="mb-4"
                     {...register("slug", { required: true })}
                     onInput={(e) => {
-                        setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
+                        setValue("slug", slugTrandform(e.currentTarget.value), { shouldValidate: true });
                     }}
                 />
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
